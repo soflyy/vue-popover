@@ -1,0 +1,37 @@
+{
+  "name": "vue-popover",
+  "version": "0.1.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/vue-popover.umd.cjs",
+  "module": "./dist/vue-popover.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/vue-popover.js",
+      "require": "./dist/vue-popover.umd.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "scripts": {
+    "dev": "vite serve demo",
+    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist && cp src/style.css dist/style.css",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "@floating-ui/vue": "^1.1.10",
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@floating-ui/vue": "^1.1.10",
+    "@types/node": "^25.1.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0",
+    "vue": "^3.5.0",
+    "vue-tsc": "^2.0.0"
+  }
+}
