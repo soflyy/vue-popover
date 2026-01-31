@@ -24,6 +24,9 @@ export interface PopoverProps {
   /** Height of the popover (CSS value) */
   height?: string | number;
 
+  /** Maximum height of the popover (CSS value) */
+  maxHeight?: string | number;
+
   /** Offset distance from activator in pixels */
   offset?: number;
 

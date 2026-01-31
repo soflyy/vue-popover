@@ -182,9 +182,9 @@ const bottomEdgeRows = ref(1);
       <div style="min-height: calc(100vh - 200px); display: flex; align-items: flex-end; justify-content: center;">
         <VPopover
           v-model:open="bottomEdgeOpen"
-          placement="top"
+          placement="bottom"
           :width="280"
-          :height="bottomEdgeRows === 1 ? undefined : `${60 + bottomEdgeRows * 40}px`"
+          :max-height="400"
           :pt="{
             root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
             content: { style: 'padding: 12px;' },

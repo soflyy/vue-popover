@@ -8,7 +8,9 @@
   background-color: white;
   padding: 0;
   outline: none;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
 
   &,
   & * {
@@ -33,6 +35,7 @@
   line-height: 1;
   padding: 8px;
   user-select: none;
+  cursor: grab;
 }
 
 .v-popover__header:active {

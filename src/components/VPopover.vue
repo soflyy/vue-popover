@@ -173,6 +173,7 @@ const popoverStyle = computed(() => {
     ...base,
     width: toCssValue(props.width),
     height: toCssValue(props.height),
+    maxHeight: toCssValue(props.maxHeight),
     zIndex: zIndex.value,
   };
 });
