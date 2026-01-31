@@ -35,19 +35,19 @@ const isOpen = computed(() => props.open);
 const floatingEnabled = ref(false);
 const hasTitle = computed(() => !!slots.title);
 
-const defaultMiddleware = () => [
+const middleware = computed(() => [
   offset(props.offset),
   flip(),
   shift({ padding: 8 }),
-];
+]);
+
+const placement = toRef(props, "placement");
 
 const { floatingStyles } = useFloating(activatorRef, popoverRef, {
-  ...props.floatingOptions,
-  placement: toRef(props, "placement"),
+  placement,
   strategy: "absolute",
-  // transform: false,
   open: floatingEnabled,
-  middleware: defaultMiddleware(),
+  middleware,
   whileElementsMounted: autoUpdate,
 });
 

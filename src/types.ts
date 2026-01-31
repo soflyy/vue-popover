@@ -30,9 +30,6 @@ export interface PopoverProps {
   /** Close when clicking outside this popover (and when clicking on a parent popover, which closes this and any nested popovers after it). Default true. */
   closeOnClickOutside?: boolean;
 
-  /** Pass-through options to Floating UI's computePosition */
-  floatingOptions?: Partial<ComputePositionConfig>;
-
   /** Per-element passthrough attributes/classes */
   pt?: PassthroughOptions;
 }

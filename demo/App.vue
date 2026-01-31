@@ -15,6 +15,8 @@ const nestedOuterOpen = ref(false);
 const nestedInnerOpen = ref(false);
 const nestedDeepOpen = ref(false);
 const draggableOpen = ref(false);
+const bottomEdgeOpen = ref(false);
+const bottomEdgeRows = ref(1);
 </script>
 
 <template>
@@ -170,6 +172,52 @@ const draggableOpen = ref(false);
           </VPopover>
         </template>
       </VPopover>
+    </section>
+
+    <section style="margin-bottom: 40px;">
+      <h2>Activator near bottom of viewport (growing height)</h2>
+      <p style="color: #666; margin-bottom: 16px;">
+        Activator is fixed near the bottom. Open the popover and click "Add row" to grow it — flip/shift should keep it in view.
+      </p>
+      <div style="min-height: calc(100vh - 200px); display: flex; align-items: flex-end; justify-content: center;">
+        <VPopover
+          v-model:open="bottomEdgeOpen"
+          placement="top"
+          :width="280"
+          :height="bottomEdgeRows === 1 ? undefined : `${60 + bottomEdgeRows * 40}px`"
+          :pt="{
+            root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
+            content: { style: 'padding: 12px;' },
+          }"
+        >
+          <template #activator>
+            <button>Open (near bottom)</button>
+          </template>
+          <template #content>
+            <p style="margin: 0 0 12px 0;">Click to grow the popover:</p>
+            <template v-for="i in bottomEdgeRows" :key="i">
+              <div :style="{ padding: '8px', background: i % 2 ? '#f0f0f0' : '#e8e8e8', borderRadius: '4px', marginBottom: i < bottomEdgeRows ? '8px' : 0 }">
+                Row {{ i }}
+              </div>
+            </template>
+            <button
+              type="button"
+              style="margin-top: 12px; padding: 6px 12px; cursor: pointer;"
+              @click="bottomEdgeRows = Math.min(bottomEdgeRows + 1, 8)"
+            >
+              Add row
+            </button>
+            <button
+              v-if="bottomEdgeRows > 1"
+              type="button"
+              style="margin-top: 12px; margin-left: 8px; padding: 6px 12px; cursor: pointer;"
+              @click="bottomEdgeRows = Math.max(bottomEdgeRows - 1, 1)"
+            >
+              Remove row
+            </button>
+          </template>
+        </VPopover>
+      </div>
     </section>
 
     <section style="margin-bottom: 40px;">
