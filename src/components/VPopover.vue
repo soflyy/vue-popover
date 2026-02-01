@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRef, nextTick, onBeforeUnmount } from "vue";
+import { ref, computed, watch, toRef, nextTick, onBeforeUnmount, provide } from "vue";
 import type { PopoverProps, PopoverEmits } from "../types";
 import { useFloating, autoUpdate, offset, flip, shift } from "@floating-ui/vue";
 import { usePopoverContext } from "../composables/usePopoverContext";
@@ -11,8 +11,9 @@ defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<PopoverProps>(), {
   open: false,
   placement: "bottom",
+  stackingStrategy: "stacked",
   offset: 8,
-  closeOnClickOutside: true,
+  closeOnClickOutside: true
 });
 
 const emit = defineEmits<PopoverEmits>();
@@ -29,7 +30,10 @@ const activatorRef = ref<HTMLElement | null>(null);
 const popoverRef = ref<HTMLElement | null>(null);
 const headerRef = ref<HTMLElement | null>(null);
 
-const { depth } = usePopoverContext();
+const placement = toRef(props, "placement");
+const stackingStrategy = toRef(props, "stackingStrategy");
+
+const parent = usePopoverContext(stackingStrategy, popoverRef, headerRef);
 
 const isOpen = computed(() => props.open);
 const floatingEnabled = ref(false);
@@ -41,9 +45,19 @@ const middleware = computed(() => [
   shift({ padding: 8 }),
 ]);
 
-const placement = toRef(props, "placement");
+const reference = computed(() => {
+  if (parent.depth > 0 && parent.stackingStrategy.value === "side-by-side") {
+    return parent.popoverRef.value;
+  }
 
-const { floatingStyles } = useFloating(activatorRef, popoverRef, {
+  if (parent.stackingStrategy.value === "stacked") {
+    return parent.headerRef.value;
+  }
+
+  return activatorRef.value;
+});
+
+const { floatingStyles } = useFloating(reference, popoverRef, {
   placement,
   strategy: "absolute",
   open: floatingEnabled,
@@ -59,12 +73,8 @@ const draggable = useDraggable({
   },
 });
 
-// Enable/disable floating positioning based on open state and drag state.
-// When opening, defer enabling so the popover (v-if) is mounted and popoverRef is set before we run computePosition.
 watch(isOpen, (open) => {
   if (open) {
-    draggable.reset();
-
     nextTick(() => {
       floatingEnabled.value = true;
     });
@@ -74,76 +84,71 @@ watch(isOpen, (open) => {
 });
 
 // Escape to close: when open, close on Escape key.
-let escapeCleanup: (() => void) | null = null;
+function destroyEscapeListener() {
+  document.removeEventListener("keydown", onEscClick, true);
+}
+
+function onEscClick(e: KeyboardEvent) {
+  if (e.key !== "Escape" || !props.open) return;
+  emit("update:open", false);
+}
 
 function setupEscapeListener() {
-  const onDocumentKeydown = (e: KeyboardEvent) => {
-    if (e.key !== "Escape" || !props.open) return;
-    emit("update:open", false);
-  };
-
   nextTick(() => {
-    document.addEventListener("keydown", onDocumentKeydown, true);
-    escapeCleanup = () => {
-      document.removeEventListener("keydown", onDocumentKeydown, true);
-      escapeCleanup = null;
-    };
+    document.addEventListener("keydown", onEscClick, true);
   });
 }
 
 // Click outside to close: when open and closeOnClickOutside, close if click is not inside this popover, its activator, or any nested popover.
-let clickOutsideCleanup: (() => void) | null = null;
+function destroyClickOutsideListener() {
+  document.removeEventListener("click", onDocumentClick, true);
+}
 
 function isClickOutside(target: EventTarget | null): boolean {
   if (!target || !(target instanceof Node)) return true;
   const root = popoverRef.value;
   const activator = activatorRef.value;
   if (root?.contains(target) || activator?.contains(target)) return false;
+
+
   const clickedPopover = (target as Element).closest?.(".v-popover");
+
   if (clickedPopover && clickedPopover !== root) {
     const clickedDepth = Number((clickedPopover as HTMLElement).dataset.depth);
     if (!Number.isNaN(clickedDepth)) {
-      if (clickedDepth > depth) return false; // nested popover, don't close
-      if (clickedDepth < depth) return true; // clicked on parent, close this and any deeper are handled by their own listeners
+      if (clickedDepth > parent.depth) return false; // nested popover, don't close
+      if (clickedDepth < parent.depth) return true; // clicked on parent, close this and any deeper are handled by their own listeners
     }
   }
+
   return true;
+}
+
+function onDocumentClick(e: MouseEvent) {
+  if (!props.open) return;
+  if (isClickOutside(e.target)) {
+    emit("update:open", false);
+  }
 }
 
 function setupClickOutsideListener() {
   if (!props.closeOnClickOutside) return;
 
-  const onDocumentClick = (e: MouseEvent) => {
-    if (!props.open) return;
-    if (isClickOutside(e.target)) {
-      emit("update:open", false);
-    }
-  };
-
   // Defer so the click that opened this popover doesn't immediately close it
   nextTick(() => {
     document.addEventListener("click", onDocumentClick, true);
-    clickOutsideCleanup = () => {
-      document.removeEventListener("click", onDocumentClick, true);
-      clickOutsideCleanup = null;
-    };
   });
 }
 
 watch(
   () => [isOpen.value, props.closeOnClickOutside] as const,
   ([open, closeOnOutside]) => {
-    if (escapeCleanup) {
-      escapeCleanup();
-      escapeCleanup = null;
-    }
-    if (clickOutsideCleanup) {
-      clickOutsideCleanup();
-      clickOutsideCleanup = null;
-    }
+    destroyEscapeListener();
+    destroyClickOutsideListener();
 
     if (open) {
       setupEscapeListener();
+
       if (closeOnOutside) {
         setupClickOutsideListener();
       }
@@ -153,11 +158,11 @@ watch(
 );
 
 onBeforeUnmount(() => {
-  escapeCleanup?.();
-  clickOutsideCleanup?.();
+  destroyEscapeListener();
+  destroyClickOutsideListener();
 });
 
-const zIndex = computed(() => 1000 + depth * 10);
+const zIndex = computed(() => 1000 + parent.depth * 10);
 
 const popoverStyle = computed(() => {
   const base =
@@ -203,7 +208,7 @@ function close() {
       ref="popoverRef"
       :class="['v-popover', props.pt?.root?.class]"
       :style="popoverStyle"
-      :data-depth="depth"
+      :data-depth="parent.depth"
       v-bind="{ ...$attrs, ...props.pt?.root }"
     >
       <div

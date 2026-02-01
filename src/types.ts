@@ -1,6 +1,9 @@
-import type { Placement, ComputePositionConfig } from "@floating-ui/dom";
+import type { Placement } from "@floating-ui/dom";
+import { Ref } from "vue";
 
 export type { Placement };
+
+export type StackingStrategy = "side-by-side" | "stacked" | "stacked-first-visible";
 
 export interface PassthroughOptions {
   root?: Record<string, any>;
@@ -17,6 +20,9 @@ export interface PopoverProps {
 
   /** Preferred placement relative to activator */
   placement?: Placement;
+
+  /** Stacking strategy for nested popovers */
+  stackingStrategy?: StackingStrategy;
 
   /** Width of the popover (CSS value) */
   width?: string | number;
@@ -43,4 +49,7 @@ export interface PopoverEmits {
 
 export interface PopoverContext {
   depth: number;
+  stackingStrategy: Ref<StackingStrategy | undefined>;
+  popoverRef: Ref<HTMLElement | null>;
+  headerRef: Ref<HTMLElement | null>;
 }

@@ -25,8 +25,10 @@ export function useDraggable(options: UseDraggableOptions) {
     handle.setPointerCapture(e.pointerId);
 
     const rect = popover.getBoundingClientRect();
-    startPointer = { x: e.clientX, y: e.clientY };
-    startPosition = { x: rect.left, y: rect.top };
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    startPointer = { x: e.clientX + scrollX, y: e.clientY + scrollY };
+    startPosition = { x: rect.left + scrollX, y: rect.top + scrollY };
 
     isDragging.value = true;
     options.onDragStart?.();
@@ -39,12 +41,16 @@ export function useDraggable(options: UseDraggableOptions) {
     const popover = options.popoverRef.value;
     if (!popover || !isDragging.value) return;
 
-    const dx = e.clientX - startPointer.x;
-    const dy = e.clientY - startPointer.y;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const dx = e.clientX + scrollX - startPointer.x;
+    const dy = e.clientY + scrollY - startPointer.y;
 
     const rect = popover.getBoundingClientRect();
-    const maxX = window.innerWidth - rect.width;
-    const maxY = window.innerHeight - rect.height;
+    const docWidth = document.documentElement.scrollWidth;
+    const docHeight = document.documentElement.scrollHeight;
+    const maxX = docWidth - rect.width;
+    const maxY = docHeight - rect.height;
 
     const newX = clamp(startPosition.x + dx, 0, maxX);
     const newY = clamp(startPosition.y + dy, 0, maxY);

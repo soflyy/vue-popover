@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-// Component
+// Components
 import '../src/style.css';
 import { VPopover } from '../src/index';
 
-// Demo State
+// Demo
+import NestedPopoverDemo from './NestedPopoverDemo.vue';
+
 const basicOpen = ref(false);
 const topOpen = ref(false);
 const leftOpen = ref(false);
 const rightOpen = ref(false);
 const bottomLeftOpen = ref(false);
 const nestedOuterOpen = ref(false);
-const nestedInnerOpen = ref(false);
-const nestedDeepOpen = ref(false);
+const nestedSideBySideOpen = ref(false);
+const nestedStackedFirstVisibleOpen = ref(false);
 const draggableOpen = ref(false);
 const bottomEdgeOpen = ref(false);
 const bottomEdgeRows = ref(1);
@@ -122,54 +124,43 @@ const bottomEdgeRows = ref(1);
       <VPopover
         v-model:open="nestedOuterOpen"
         placement="bottom"
+        stacking-strategy="stacked"
         :width="300"
-        :pt="{
-          root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
-          handle: { style: 'padding: 8px 12px; background: #e8f4fd; border-radius: 8px 8px 0 0; cursor: grab;' },
-          header: { style: 'padding: 8px 12px; font-weight: bold;' },
-          content: { style: 'padding: 12px;' },
-        }"
       >
-        <template #activator><button>Open Outer</button></template>
+        <template #activator><button>Open Stacked</button></template>
         <template #title>&#9776; Drag Outer</template>
         <template #content>
           <p>This popover contains a nested popover:</p>
-          <VPopover
-            v-model:open="nestedInnerOpen"
-            placement="right"
-            width="220"
-            :pt="{
-              root: { style: 'background: #fffbe6; border: 1px solid #e0c050; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
-              handle: { style: 'padding: 6px 10px; background: #f5e6a0; border-radius: 8px 8px 0 0; cursor: grab;' },
-              content: { style: 'padding: 10px;' },
-            }"
-          >
-            <template #activator><button>Open Inner</button></template>
-            <template #title>&#9776; Drag Inner</template>
-            <template #content>
-              <p>I'm nested! Higher z-index.</p>
-              <VPopover
-                v-model:open="nestedDeepOpen"
-                placement="bottom-start"
-                width="200"
-                :pt="{
-                  root: { style: 'background: #f0e6ff; border: 1px solid #9b7ed9; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
-                  handle: { style: 'padding: 6px 10px; background: #e0d0f0; border-radius: 8px 8px 0 0; cursor: grab;' },
-                  content: { style: 'padding: 10px;' },
-                }"
-              >
-                <template #activator>
-                  <button>Open Deep</button>
-                </template>
+          <NestedPopoverDemo />
+        </template>
+      </VPopover>
 
-                <template #title>&#9776; Drag Deep</template>
 
-                <template #content>
-                  <p>3 levels deep! Even higher z-index.</p>
-                </template>
-              </VPopover>
-            </template>
-          </VPopover>
+      <VPopover
+        v-model:open="nestedSideBySideOpen"
+        placement="bottom"
+        stacking-strategy="side-by-side"
+        :width="300"
+      >
+        <template #activator><button>Open Side By Side</button></template>
+        <template #title>&#9776; Drag Side By Side</template>
+        <template #content>
+          <p>This popover is side by side with the outer popover:</p>
+          <NestedPopoverDemo />
+        </template>
+      </VPopover>
+
+      <VPopover
+        v-model:open="nestedStackedFirstVisibleOpen"
+        placement="bottom"
+        stacking-strategy="stacked-first-visible"
+        :width="300"
+      >
+        <template #activator><button>Open Stacked First Visible</button></template>
+        <template #title>&#9776; Drag Stacked First Visible</template>
+        <template #content>
+          <p>This popover is stacked first visible with the outer popover:</p>
+          <NestedPopoverDemo />
         </template>
       </VPopover>
     </section>
@@ -182,7 +173,7 @@ const bottomEdgeRows = ref(1);
       <div style="min-height: calc(100vh - 200px); display: flex; align-items: flex-end; justify-content: center;">
         <VPopover
           v-model:open="bottomEdgeOpen"
-          placement="bottom"
+          placement="right"
           :width="280"
           :max-height="400"
           :pt="{
