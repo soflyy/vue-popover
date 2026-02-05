@@ -42,11 +42,17 @@
   cursor: grabbing;
 }
 
+.v-popover__actions {
+  display: flex;
+  align-items: center;
+  margin-inline-start: auto;
+  gap: 4px;
+}
+
 .v-popover__close {
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
-  margin-inline-start: auto;
 }
 
 .v-popover__close:hover {

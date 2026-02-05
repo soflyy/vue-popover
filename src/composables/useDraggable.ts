@@ -1,5 +1,5 @@
 import { ref, onBeforeUnmount, type Ref, computed } from "vue";
-import { clamp } from "../utils";
+import { clamp } from "../utils/css";
 
 export interface UseDraggableOptions {
   draggableRef: Ref<HTMLElement | null>;

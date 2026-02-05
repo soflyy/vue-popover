@@ -6,10 +6,16 @@ import type {
   Placement,
   StackingStrategy
 } from "../types";
-import { useFloating, autoUpdate, offset, flip, shift } from "@floating-ui/vue";
+import { useFloating, autoUpdate } from "@floating-ui/vue";
 import { usePopoverContext } from "../composables/usePopoverContext";
 import { useDraggable } from "../composables/useDraggable";
-import { toCssValue, isClickOutside } from "../utils";
+import { toCssValue } from "../utils/css";
+import { isClickOutside } from "../utils/dom";
+import {
+  createPopoverMiddleware,
+  calculatePlacement,
+  getPopoverReference
+} from "../utils/popover";
 
 defineOptions({ inheritAttrs: false });
 
@@ -19,6 +25,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   open: false,
   placement: DEFAULT_PLACEMENT,
   offset: 8,
+  padding: 8,
   flip: false,
   closeOnClickOutside: true
 });
@@ -28,6 +35,7 @@ const emit = defineEmits<PopoverEmits>();
 const slots = defineSlots<{
   activator(): any;
   title(): any;
+  actions(): any;
   close(): any;
   header(): any;
   content(): any;
@@ -72,84 +80,31 @@ const basePlacement = computed<Placement>(() => {
 
 const middleware = computed(() => {
   const isStacked = activeStackingStrategy.value === "stacked" && parent.depth > 0;
-  const mainAxis = props.offset;
-  const crossAxis = isStacked ? 15 : 0;
 
-  const pipeline = [
-    offset({
-      mainAxis,
-      crossAxis
-    })
-  ];
-
-  if (props.flip) {
-    pipeline.push(flip());
-  }
-
-  pipeline.push(
-    shift({
-      padding: 8,
-      crossAxis: true,
-    })
-  );
-
-  return pipeline;
+  return createPopoverMiddleware({
+    offset: props.offset,
+    flip: props.flip,
+    isStacked
+  });
 });
 
 const internalPlacement = computed<Placement>(() => {
-  const strategy = activeStackingStrategy.value;
-
-  if (!strategy) return basePlacement.value;
-
-  if (strategy === "side-by-side") {
-    return parent.depth > 0 ? "right-start" : basePlacement.value;
-  }
-
-  if (strategy === "stacked-first-visible") {
-    if (parent.depth === 1) return "right-start";
-    if (parent.depth > 1) return DEFAULT_PLACEMENT;
-    return basePlacement.value;
-  }
-
-  if (strategy === "stacked") {
-    return parent.depth > 0 ? DEFAULT_PLACEMENT : basePlacement.value;
-  }
-
-  return basePlacement.value;
+  return calculatePlacement({
+    strategy: activeStackingStrategy.value,
+    parentDepth: parent.depth,
+    basePlacement: basePlacement.value,
+    defaultPlacement: DEFAULT_PLACEMENT
+  });
 });
 
 const reference = computed(() => {
-  const strategy = activeStackingStrategy.value;
-
-  if (!strategy) return activatorRef.value;
-
-  // 1) Side by side
-  // If the current depth is 0, return the activator as reference.
-  // If the current depth is greater than 0, return the parent's popover as reference. The placement must be fixed to right-start.
-  //
-  if (strategy === "side-by-side") {
-    return parent.depth > 0 ? parent.popoverRef.value : activatorRef.value;
-  }
-
-  // 2) Stacked (first visible)
-  // If the current depth is 0, return the activator as reference.
-  // If the current depth is 1, return the parent's popover as reference. The placement must be fixed to right-start.
-  // If the current depth is greater than 1, return the parent's header as reference and the placement must be fixed to the bottom.
-  if (strategy === "stacked-first-visible") {
-    if (parent.depth === 1) return parent.popoverRef.value;
-    if (parent.depth > 1) return parent.headerRef.value;
-    return activatorRef.value;
-  }
-
-  // 3) Stacked
-  // Return the parent's header as reference and the placement must be fixed to the bottom with a 20px offset left and top.
-  if (strategy === "stacked") {
-    return parent.depth > 0 ? parent.headerRef.value : activatorRef.value;
-  }
-
-  // 4) Default
-  // Return the activator as reference.
-  return activatorRef.value;
+  return getPopoverReference({
+    strategy: activeStackingStrategy.value,
+    parentDepth: parent.depth,
+    activatorRef: activatorRef.value,
+    parentPopoverRef: parent.popoverRef.value,
+    parentHeaderRef: parent.headerRef.value
+  });
 });
 
 const { floatingStyles } = useFloating(reference, popoverRef, {
@@ -297,15 +252,17 @@ function close() {
       >
         <slot name="title" />
 
-        <div
-          :class="['v-popover__close', props.pt?.close?.class]"
-          v-bind="props.pt?.close"
-          @pointerdown.stop
-          @click.stop.prevent="close"
-        >
-          <slot name="close">
-            &times;
-          </slot>
+        <div :class="['v-popover__header-actions', props.pt?.actions?.class]" v-bind="props.pt?.actions">
+          <slot name="actions" />
+
+          <button
+            :class="['v-popover__close', props.pt?.close?.class]"
+            v-bind="props.pt?.close"
+            @pointerdown.stop
+            @click.stop.prevent="close"
+          >
+            <slot name="close">&times;</slot>
+          </button>
         </div>
       </div>
 

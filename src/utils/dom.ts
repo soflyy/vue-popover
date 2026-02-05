@@ -1,14 +1,3 @@
-export function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
-}
-
-export function toCssValue(
-  value: string | number | undefined
-): string | undefined {
-  if (value === undefined) return undefined;
-  return typeof value === "number" ? `${value}px` : value;
-}
-
 /**
  * Returns true if the click target is outside the popover root, its activator,
  * and not inside a nested popover that should keep this one open.

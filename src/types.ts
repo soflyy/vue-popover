@@ -19,9 +19,9 @@ export type StackingStrategy = "side-by-side" | "stacked" | "stacked-first-visib
 export interface PassthroughOptions {
   root?: Record<string, any>;
   activator?: Record<string, any>;
-  handle?: Record<string, any>;
-  close?: Record<string, any>;
   header?: Record<string, any>;
+  actions?: Record<string, any>;
+  close?: Record<string, any>;
   content?: Record<string, any>;
 }
 
@@ -43,6 +43,9 @@ export interface PopoverProps {
 
   /** Offset distance from activator in pixels */
   offset?: number;
+
+  /** Padding between the popover and the viewport in pixels */
+  padding?: number;
 
   /** Enable floating-ui flip middleware */
   flip?: boolean;
