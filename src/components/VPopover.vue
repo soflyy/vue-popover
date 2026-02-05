@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   open: false,
   placement: DEFAULT_PLACEMENT,
   offset: 8,
+  flip: false,
   closeOnClickOutside: true
 });
 
@@ -74,17 +75,25 @@ const middleware = computed(() => {
   const mainAxis = props.offset;
   const crossAxis = isStacked ? 15 : 0;
 
-  return [
+  const pipeline = [
     offset({
       mainAxis,
       crossAxis
-    }),
-    // flip(),
+    })
+  ];
+
+  if (props.flip) {
+    pipeline.push(flip());
+  }
+
+  pipeline.push(
     shift({
       padding: 8,
       crossAxis: true,
-    }),
-  ];
+    })
+  );
+
+  return pipeline;
 });
 
 const internalPlacement = computed<Placement>(() => {

@@ -33,6 +33,9 @@ export interface PopoverProps {
   /** Offset distance from activator in pixels */
   offset?: number;
 
+  /** Enable floating-ui flip middleware */
+  flip?: boolean;
+
   /** Close when clicking outside this popover (and when clicking on a parent popover, which closes this and any nested popovers after it). Default true. */
   closeOnClickOutside?: boolean;
 
