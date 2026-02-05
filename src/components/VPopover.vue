@@ -27,7 +27,8 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   offset: 8,
   padding: 8,
   flip: false,
-  closeOnClickOutside: true
+  closeOnClickOutside: true,
+  closeOnClick: false
 });
 
 const emit = defineEmits<PopoverEmits>();
@@ -222,6 +223,11 @@ function toggleOpen() {
 function close() {
   emit("update:open", false);
 }
+
+function onPopoverClick() {
+  if (!props.closeOnClick) return;
+  emit("update:open", false);
+}
 </script>
 
 <template>
@@ -241,6 +247,7 @@ function close() {
       :class="['v-popover', props.pt?.root?.class]"
       :style="popoverStyle"
       :data-depth="parent.depth"
+      @click="onPopoverClick"
       v-bind="{ ...$attrs, ...props.pt?.root }"
     >
       <div

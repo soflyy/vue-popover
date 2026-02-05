@@ -60,6 +60,7 @@ const open = ref(false);
 | `height` | `string \| number` | — | Popover height. |
 | `offset` | `number` | `8` | Gap in pixels between popover and activator. |
 | `closeOnClickOutside` | `boolean` | `true` | Close when clicking outside the popover. |
+| `closeOnClick` | `boolean` | `false` | Close when clicking inside the popover. |
 | `pt` | `PassthroughOptions` | — | Passthrough attributes/classes/styles for root, activator, header, close, content. |
 
 ## Slots

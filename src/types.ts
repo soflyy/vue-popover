@@ -53,6 +53,9 @@ export interface PopoverProps {
   /** Close when clicking outside this popover (and when clicking on a parent popover, which closes this and any nested popovers after it). Default true. */
   closeOnClickOutside?: boolean;
 
+  /** Close when clicking inside the popover. Default false. */
+  closeOnClick?: boolean;
+
   /** Per-element passthrough attributes/classes */
   pt?: PassthroughOptions;
 }

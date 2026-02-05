@@ -50,6 +50,10 @@
 }
 
 .v-popover__close {
+  appearance: none;
+  border: none;
+  padding: 0;
+  background-color: transparent;
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
