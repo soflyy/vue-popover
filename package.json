@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "vite serve demo",
     "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist && cp src/style.css dist/style.css",
+    "prepare": "npm run build",
     "preview": "vite preview"
   },
   "peerDependencies": {

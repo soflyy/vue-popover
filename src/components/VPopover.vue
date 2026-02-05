@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRef, nextTick, onBeforeUnmount, provide } from "vue";
+import { ref, computed, watch, toRef, nextTick, onBeforeUnmount } from "vue";
 import type {
   PopoverProps,
   PopoverEmits,

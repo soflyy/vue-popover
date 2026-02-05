@@ -1,7 +1,18 @@
-import type { Placement } from "@floating-ui/dom";
 import { Ref } from "vue";
 
-export type { Placement };
+export type Placement =
+  | "top"
+  | "bottom"
+  | "left"
+  | "right"
+  | "top-start"
+  | "top-end"
+  | "bottom-start"
+  | "bottom-end"
+  | "left-start"
+  | "left-end"
+  | "right-start"
+  | "right-end";
 
 export type StackingStrategy = "side-by-side" | "stacked" | "stacked-first-visible";
 
