@@ -29,7 +29,7 @@ const bottomEdgeRows = ref(1);
       <h2>Basic (bottom)</h2>
       <VPopover
         v-model:open="basicOpen"
-        placement="bottom"
+        placement="bottom-start"
         :width="250"
       >
         <template #activator>
@@ -77,7 +77,9 @@ const bottomEdgeRows = ref(1);
             content: { style: 'padding: 12px;' },
           }"
         >
-          <template #activator><button>Open Left</button></template>
+          <template #activator>
+            <button>Open Left</button>
+          </template>
           <template #content><p>Left placement</p></template>
         </VPopover>
       </div>
@@ -121,48 +123,44 @@ const bottomEdgeRows = ref(1);
 
     <section style="margin-bottom: 40px;">
       <h2>Nested Popovers</h2>
-      <VPopover
-        v-model:open="nestedOuterOpen"
-        placement="bottom"
-        stacking-strategy="stacked"
-        :width="300"
-      >
-        <template #activator><button>Open Stacked</button></template>
-        <template #title>&#9776; Drag Outer</template>
-        <template #content>
-          <p>This popover contains a nested popover:</p>
-          <NestedPopoverDemo />
-        </template>
-      </VPopover>
-
-
-      <VPopover
-        v-model:open="nestedSideBySideOpen"
-        placement="bottom"
-        stacking-strategy="side-by-side"
-        :width="300"
-      >
-        <template #activator><button>Open Side By Side</button></template>
-        <template #title>&#9776; Drag Side By Side</template>
-        <template #content>
-          <p>This popover is side by side with the outer popover:</p>
-          <NestedPopoverDemo />
-        </template>
-      </VPopover>
-
-      <VPopover
-        v-model:open="nestedStackedFirstVisibleOpen"
-        placement="bottom"
-        stacking-strategy="stacked-first-visible"
-        :width="300"
-      >
-        <template #activator><button>Open Stacked First Visible</button></template>
-        <template #title>&#9776; Drag Stacked First Visible</template>
-        <template #content>
-          <p>This popover is stacked first visible with the outer popover:</p>
-          <NestedPopoverDemo />
-        </template>
-      </VPopover>
+      <div style="display: flex; gap: 16px;">
+        <VPopover
+          v-model:open="nestedOuterOpen"
+          placement="stacked"
+          :width="300"
+        >
+          <template #activator><button>Open Stacked</button></template>
+          <template #title>&#9776; Drag Outer</template>
+          <template #content>
+            <p>This popover contains a nested popover:</p>
+            <NestedPopoverDemo />
+          </template>
+        </VPopover>
+        <VPopover
+          v-model:open="nestedSideBySideOpen"
+          placement="side-by-side"
+          :width="300"
+        >
+          <template #activator><button>Open Side By Side</button></template>
+          <template #title>&#9776; Drag Side By Side</template>
+          <template #content>
+            <p>This popover is side by side with the outer popover:</p>
+            <NestedPopoverDemo />
+          </template>
+        </VPopover>
+        <VPopover
+          v-model:open="nestedStackedFirstVisibleOpen"
+          placement="stacked-first-visible"
+          :width="300"
+        >
+          <template #activator><button>Open Stacked First Visible</button></template>
+          <template #title>&#9776; Drag Stacked First Visible</template>
+          <template #content>
+            <p>This popover is stacked first visible with the outer popover:</p>
+            <NestedPopoverDemo />
+          </template>
+        </VPopover>
+      </div>
     </section>
 
     <section style="margin-bottom: 40px;">
@@ -215,7 +213,7 @@ const bottomEdgeRows = ref(1);
       <h2>Draggable</h2>
       <VPopover
         v-model:open="draggableOpen"
-        placement="bottom"
+        placement="bottom-start"
         width="280"
         height="180"
         :pt="{
@@ -245,4 +243,7 @@ body {
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+p {
+  margin-top: 0;
+}
 </style>

@@ -1,8 +1,8 @@
-import { ref, onBeforeUnmount, type Ref } from "vue";
+import { ref, onBeforeUnmount, type Ref, computed } from "vue";
 import { clamp } from "../utils";
 
 export interface UseDraggableOptions {
-  headerRef: Ref<HTMLElement | null>;
+  draggableRef: Ref<HTMLElement | null>;
   popoverRef: Ref<HTMLElement | null>;
   onDragStart?: () => void;
   onDragEnd?: (position: { x: number; y: number }) => void;
@@ -12,22 +12,31 @@ export function useDraggable(options: UseDraggableOptions) {
   const isDragging = ref(false);
   const isDragged = ref(false);
   const dragPosition = ref<{ x: number; y: number } | null>(null);
+  const shouldUseDragStyles = computed(() => isDragged.value && dragPosition.value);
 
   let startPointer = { x: 0, y: 0 };
   let startPosition = { x: 0, y: 0 };
 
-  function onPointerDown(e: PointerEvent) {
-    const handle = options.headerRef.value;
+  const styles = computed(() => {
+    return {
+      position: "absolute" as const,
+      left: `${dragPosition.value!.x}px`,
+      top: `${dragPosition.value!.y}px`,
+    };
+  });
+
+  function onPointerDown(event: PointerEvent) {
+    const handle = options.draggableRef.value;
     const popover = options.popoverRef.value;
     if (!handle || !popover) return;
 
-    e.preventDefault();
-    handle.setPointerCapture(e.pointerId);
+    event.preventDefault();
+    handle.setPointerCapture(event.pointerId);
 
     const rect = popover.getBoundingClientRect();
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
-    startPointer = { x: e.clientX + scrollX, y: e.clientY + scrollY };
+    startPointer = { x: event.clientX + scrollX, y: event.clientY + scrollY };
     startPosition = { x: rect.left + scrollX, y: rect.top + scrollY };
 
     isDragging.value = true;
@@ -37,14 +46,14 @@ export function useDraggable(options: UseDraggableOptions) {
     document.addEventListener("pointerup", onPointerUp);
   }
 
-  function onPointerMove(e: PointerEvent) {
+  function onPointerMove(event: PointerEvent) {
     const popover = options.popoverRef.value;
     if (!popover || !isDragging.value) return;
 
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
-    const dx = e.clientX + scrollX - startPointer.x;
-    const dy = e.clientY + scrollY - startPointer.y;
+    const dx = event.clientX + scrollX - startPointer.x;
+    const dy = event.clientY + scrollY - startPointer.y;
 
     const rect = popover.getBoundingClientRect();
     const docWidth = document.documentElement.scrollWidth;
@@ -59,10 +68,11 @@ export function useDraggable(options: UseDraggableOptions) {
     isDragged.value = true;
   }
 
-  function onPointerUp(e: PointerEvent) {
-    const handle = options.headerRef.value;
+  function onPointerUp(event: PointerEvent) {
+    const handle = options.draggableRef.value;
+
     if (handle) {
-      handle.releasePointerCapture(e.pointerId);
+      handle.releasePointerCapture(event.pointerId);
     }
 
     isDragging.value = false;
@@ -89,6 +99,8 @@ export function useDraggable(options: UseDraggableOptions) {
     isDragged,
     dragPosition,
     onPointerDown,
+    styles,
+    shouldUseDragStyles,
     reset,
   };
 }

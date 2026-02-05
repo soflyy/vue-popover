@@ -19,10 +19,7 @@ export interface PopoverProps {
   open?: boolean;
 
   /** Preferred placement relative to activator */
-  placement?: Placement;
-
-  /** Stacking strategy for nested popovers */
-  stackingStrategy?: StackingStrategy;
+  placement?: Placement | StackingStrategy;
 
   /** Width of the popover (CSS value) */
   width?: string | number;
@@ -49,7 +46,7 @@ export interface PopoverEmits {
 
 export interface PopoverContext {
   depth: number;
-  stackingStrategy: Ref<StackingStrategy | undefined>;
+  placement: Ref<Placement | StackingStrategy | undefined>;
   popoverRef: Ref<HTMLElement | null>;
   headerRef: Ref<HTMLElement | null>;
 }
