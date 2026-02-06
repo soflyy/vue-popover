@@ -63,7 +63,7 @@ export interface PopoverProps {
   closeOnClickOutside?: boolean;
 
   /** Close when clicking inside the popover. Default false. */
-  closeOnClick?: boolean;
+  closeOnContentClick?: boolean;
 
   /** Close when pressing Escape. Default true. */
   closeOnEsc?: boolean;

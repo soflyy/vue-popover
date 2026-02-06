@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   padding: 8,
   flip: false,
   closeOnClickOutside: true,
-  closeOnClick: false,
+  closeOnContentClick: true,
   closeOnEsc: true
 });
 
@@ -235,7 +235,7 @@ function close() {
 }
 
 function onPopoverClick() {
-  if (!props.closeOnClick) return;
+  if (!props.closeOnContentClick) return;
   emit("update:open", false);
 }
 </script>
