@@ -35,7 +35,11 @@ const props = withDefaults(defineProps<PopoverProps>(), {
 const emit = defineEmits<PopoverEmits>();
 
 const slots = defineSlots<{
-  activator(): any;
+  activator(props: {
+    props: {
+      onClick: (event: MouseEvent) => void };
+    }
+  ): any;
   title(): any;
   actions(): any;
   close(): any;
@@ -234,8 +238,9 @@ function close() {
   emit("update:open", false);
 }
 
-function onPopoverClick() {
+function onPopoverClick(event: MouseEvent) {
   if (!props.closeOnContentClick) return;
+  if (headerRef.value?.contains(event.target as Node)) return;
   emit("update:open", false);
 }
 </script>
@@ -268,7 +273,11 @@ function onPopoverClick() {
       >
         <slot name="title" />
 
-        <div class="v-popover__actions" v-bind="props.pt?.actions">
+        <div
+          class="v-popover__actions"
+          v-bind="props.pt?.actions"
+          @pointerdown.stop
+        >
           <slot name="actions" />
 
           <button

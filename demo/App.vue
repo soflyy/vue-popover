@@ -19,6 +19,12 @@ const nestedStackedFirstVisibleOpen = ref(false);
 const draggableOpen = ref(false);
 const bottomEdgeOpen = ref(false);
 const bottomEdgeRows = ref(1);
+
+
+const runDemoActions = (event: MouseEvent) => {
+  console.log(event);
+  alert('runDemoActions');
+};
 </script>
 
 <template>
@@ -34,6 +40,10 @@ const bottomEdgeRows = ref(1);
       >
         <template #activator="{ props }">
           <button v-bind="props">Open Bottom</button>
+        </template>
+
+        <template #actions>
+          <button @click.stop="runDemoActions">Action</button>
         </template>
 
         <template #title>
