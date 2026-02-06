@@ -218,7 +218,10 @@ const popoverStyle = computed(() => {
   };
 });
 
-function toggleOpen() {
+function toggleOpen(event: MouseEvent) {
+  event.stopPropagation();
+  activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
+
   emit("update:open", !props.open);
 }
 
@@ -233,14 +236,13 @@ function onPopoverClick() {
 </script>
 
 <template>
-  <span
-    ref="activatorRef"
+  <slot
     class="v-popover__activator"
-    @click="toggleOpen"
-    v-bind="props.pt?.activator"
-  >
-    <slot name="activator" />
-  </span>
+    name="activator"
+    :props="{
+      onClick: toggleOpen,
+    }"
+  />
 
   <Teleport to="body">
     <div

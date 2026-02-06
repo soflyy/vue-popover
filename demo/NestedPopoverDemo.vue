@@ -18,7 +18,9 @@ const deepOpen = ref(false);
       content: { style: 'padding: 10px;' },
     }"
   >
-    <template #activator><button>Open Inner</button></template>
+    <template #activator="{ props }">
+      <button v-bind="props">Open Inner</button>
+    </template>
     <template #title>&#9776; Drag Inner</template>
     <p>I'm nested! Higher z-index.</p>
     <VPopover
@@ -31,7 +33,9 @@ const deepOpen = ref(false);
         content: { style: 'padding: 10px;' },
       }"
     >
-      <template #activator><button>Open Deep</button></template>
+      <template #activator="{ props }">
+        <button v-bind="props">Open Deep</button>
+      </template>
       <template #title>&#9776; Drag Deep</template>
       <p>3 levels deep! Even higher z-index.</p>
     </VPopover>

@@ -75,7 +75,9 @@ export function getPopoverReference(options: {
     parentHeaderRef
   } = options;
 
-  if (!strategy) return activatorRef;
+  if (!strategy) {
+    return activatorRef;
+  }
 
   // 1) Side by side
   // If the current depth is 0, return the activator as reference.

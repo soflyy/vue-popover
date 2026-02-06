@@ -32,15 +32,15 @@ const bottomEdgeRows = ref(1);
         placement="bottom-start"
         :width="250"
       >
-        <template #activator>
-          <button>Open Bottom</button>
+        <template #activator="{ props }">
+          <button v-bind="props">Open Bottom</button>
         </template>
 
         <template #title>
           Basic Popover
         </template>
 
-        <template #handle>
+        <template #header>
           <span>&#9776;</span>
         </template>
         <p>This is a basic popover positioned at the bottom.</p>
@@ -59,7 +59,10 @@ const bottomEdgeRows = ref(1);
             content: { style: 'padding: 12px;' },
           }"
         >
-          <template #activator><button>Open Top</button></template>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Top</button>
+          </template>
+
           <p>Top placement</p>
         </VPopover>
       </div>
@@ -75,8 +78,8 @@ const bottomEdgeRows = ref(1);
             content: { style: 'padding: 12px;' },
           }"
         >
-          <template #activator>
-            <button>Open Left</button>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Left</button>
           </template>
           <p>Left placement</p>
         </VPopover>
@@ -93,8 +96,8 @@ const bottomEdgeRows = ref(1);
             content: { style: 'padding: 12px;' },
           }"
         >
-          <template #activator>
-            <button>Open Right</button>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Right</button>
           </template>
           <p>Right placement</p>
         </VPopover>
@@ -111,8 +114,8 @@ const bottomEdgeRows = ref(1);
             content: { style: 'padding: 12px;' },
           }"
         >
-          <template #activator>
-            <button>Open Bottom Left</button>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Bottom Left</button>
           </template>
           <p>Bottom-left placement</p>
         </VPopover>
@@ -127,7 +130,9 @@ const bottomEdgeRows = ref(1);
           placement="stacked"
           :width="300"
         >
-          <template #activator><button>Open Stacked</button></template>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Stacked</button>
+          </template>
           <template #title>&#9776; Drag Outer</template>
           <p>This popover contains a nested popover:</p>
           <NestedPopoverDemo />
@@ -137,7 +142,9 @@ const bottomEdgeRows = ref(1);
           placement="side-by-side"
           :width="300"
         >
-          <template #activator><button>Open Side By Side</button></template>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Side By Side</button>
+          </template>
           <template #title>&#9776; Drag Side By Side</template>
           <p>This popover is side by side with the outer popover:</p>
           <NestedPopoverDemo />
@@ -147,7 +154,9 @@ const bottomEdgeRows = ref(1);
           placement="stacked-first-visible"
           :width="300"
         >
-          <template #activator><button>Open Stacked First Visible</button></template>
+          <template #activator="{ props }">
+            <button v-bind="props">Open Stacked First Visible</button>
+          </template>
           <template #title>&#9776; Drag Stacked First Visible</template>
           <p>This popover is stacked first visible with the outer popover:</p>
           <NestedPopoverDemo />
@@ -171,8 +180,8 @@ const bottomEdgeRows = ref(1);
             content: { style: 'padding: 12px;' },
           }"
         >
-          <template #activator>
-            <button>Open (near bottom)</button>
+          <template #activator="{ props }">
+            <button v-bind="props">Open (near bottom)</button>
           </template>
           <p style="margin: 0 0 12px 0;">Click to grow the popover:</p>
           <template v-for="i in bottomEdgeRows" :key="i">
@@ -208,12 +217,12 @@ const bottomEdgeRows = ref(1);
         height="180"
         :pt="{
           root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
-          handle: { style: 'padding: 10px 12px; background: #d4edda; border-radius: 8px 8px 0 0; cursor: grab; user-select: none;' },
+          header: { style: 'padding: 10px 12px; background: #d4edda; border-radius: 8px 8px 0 0; cursor: grab; user-select: none;' },
           content: { style: 'padding: 12px;' },
         }"
       >
-        <template #activator>
-          <button>Open Draggable</button>
+        <template #activator="{ props }">
+          <button v-bind="props">Open Draggable</button>
         </template>
         <template #title>
           &#9776; Draggable Popover
@@ -234,5 +243,9 @@ body {
 
 p {
   margin-top: 0;
+}
+
+.v-popover__content {
+  padding: 12px;
 }
 </style>

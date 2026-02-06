@@ -62,7 +62,3 @@
 .v-popover__close:hover {
   opacity: 1;
 }
-
-.v-popover__content {
-  padding: 12px;
-}
