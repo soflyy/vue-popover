@@ -225,6 +225,7 @@ const popoverStyle = computed(() => {
 
 function toggleOpen(event: MouseEvent) {
   event.stopPropagation();
+  console.log('Current target:', event.currentTarget);
   activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
 
   emit("update:open", !props.open);
