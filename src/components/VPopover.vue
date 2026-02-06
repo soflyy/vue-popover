@@ -39,7 +39,7 @@ const slots = defineSlots<{
   actions(): any;
   close(): any;
   header(): any;
-  content(): any;
+  default(): any;
 }>();
 
 const activatorRef = ref<HTMLElement | null>(null);
@@ -277,7 +277,7 @@ function onPopoverClick() {
         :class="['v-popover__content', props.pt?.content?.class]"
         v-bind="props.pt?.content"
       >
-        <slot name="content" />
+        <slot />
       </div>
     </div>
   </Teleport>

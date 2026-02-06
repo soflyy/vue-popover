@@ -43,9 +43,7 @@ const bottomEdgeRows = ref(1);
         <template #handle>
           <span>&#9776;</span>
         </template>
-        <template #content>
-          <p>This is a basic popover positioned at the bottom.</p>
-        </template>
+        <p>This is a basic popover positioned at the bottom.</p>
       </VPopover>
     </section>
 
@@ -62,7 +60,7 @@ const bottomEdgeRows = ref(1);
           }"
         >
           <template #activator><button>Open Top</button></template>
-          <template #content><p>Top placement</p></template>
+          <p>Top placement</p>
         </VPopover>
       </div>
 
@@ -80,7 +78,7 @@ const bottomEdgeRows = ref(1);
           <template #activator>
             <button>Open Left</button>
           </template>
-          <template #content><p>Left placement</p></template>
+          <p>Left placement</p>
         </VPopover>
       </div>
 
@@ -98,7 +96,7 @@ const bottomEdgeRows = ref(1);
           <template #activator>
             <button>Open Right</button>
           </template>
-          <template #content><p>Right placement</p></template>
+          <p>Right placement</p>
         </VPopover>
       </div>
 
@@ -116,7 +114,7 @@ const bottomEdgeRows = ref(1);
           <template #activator>
             <button>Open Bottom Left</button>
           </template>
-          <template #content><p>Bottom-left placement</p></template>
+          <p>Bottom-left placement</p>
         </VPopover>
       </div>
     </section>
@@ -131,10 +129,8 @@ const bottomEdgeRows = ref(1);
         >
           <template #activator><button>Open Stacked</button></template>
           <template #title>&#9776; Drag Outer</template>
-          <template #content>
-            <p>This popover contains a nested popover:</p>
-            <NestedPopoverDemo />
-          </template>
+          <p>This popover contains a nested popover:</p>
+          <NestedPopoverDemo />
         </VPopover>
         <VPopover
           v-model:open="nestedSideBySideOpen"
@@ -143,10 +139,8 @@ const bottomEdgeRows = ref(1);
         >
           <template #activator><button>Open Side By Side</button></template>
           <template #title>&#9776; Drag Side By Side</template>
-          <template #content>
-            <p>This popover is side by side with the outer popover:</p>
-            <NestedPopoverDemo />
-          </template>
+          <p>This popover is side by side with the outer popover:</p>
+          <NestedPopoverDemo />
         </VPopover>
         <VPopover
           v-model:open="nestedStackedFirstVisibleOpen"
@@ -155,10 +149,8 @@ const bottomEdgeRows = ref(1);
         >
           <template #activator><button>Open Stacked First Visible</button></template>
           <template #title>&#9776; Drag Stacked First Visible</template>
-          <template #content>
-            <p>This popover is stacked first visible with the outer popover:</p>
-            <NestedPopoverDemo />
-          </template>
+          <p>This popover is stacked first visible with the outer popover:</p>
+          <NestedPopoverDemo />
         </VPopover>
       </div>
     </section>
@@ -182,29 +174,27 @@ const bottomEdgeRows = ref(1);
           <template #activator>
             <button>Open (near bottom)</button>
           </template>
-          <template #content>
-            <p style="margin: 0 0 12px 0;">Click to grow the popover:</p>
-            <template v-for="i in bottomEdgeRows" :key="i">
-              <div :style="{ padding: '8px', background: i % 2 ? '#f0f0f0' : '#e8e8e8', borderRadius: '4px', marginBottom: i < bottomEdgeRows ? '8px' : 0 }">
-                Row {{ i }}
-              </div>
-            </template>
-            <button
-              type="button"
-              style="margin-top: 12px; padding: 6px 12px; cursor: pointer;"
-              @click="bottomEdgeRows = Math.min(bottomEdgeRows + 1, 8)"
-            >
-              Add row
-            </button>
-            <button
-              v-if="bottomEdgeRows > 1"
-              type="button"
-              style="margin-top: 12px; margin-left: 8px; padding: 6px 12px; cursor: pointer;"
-              @click="bottomEdgeRows = Math.max(bottomEdgeRows - 1, 1)"
-            >
-              Remove row
-            </button>
+          <p style="margin: 0 0 12px 0;">Click to grow the popover:</p>
+          <template v-for="i in bottomEdgeRows" :key="i">
+            <div :style="{ padding: '8px', background: i % 2 ? '#f0f0f0' : '#e8e8e8', borderRadius: '4px', marginBottom: i < bottomEdgeRows ? '8px' : 0 }">
+              Row {{ i }}
+            </div>
           </template>
+          <button
+            type="button"
+            style="margin-top: 12px; padding: 6px 12px; cursor: pointer;"
+            @click="bottomEdgeRows = Math.min(bottomEdgeRows + 1, 8)"
+          >
+            Add row
+          </button>
+          <button
+            v-if="bottomEdgeRows > 1"
+            type="button"
+            style="margin-top: 12px; margin-left: 8px; padding: 6px 12px; cursor: pointer;"
+            @click="bottomEdgeRows = Math.max(bottomEdgeRows - 1, 1)"
+          >
+            Remove row
+          </button>
         </VPopover>
       </div>
     </section>
@@ -228,9 +218,7 @@ const bottomEdgeRows = ref(1);
         <template #title>
           &#9776; Draggable Popover
         </template>
-        <template #content>
-          <p>Drag me around! I stay within the viewport.</p>
-        </template>
+        <p>Drag me around! I stay within the viewport.</p>
       </VPopover>
     </section>
   </div>

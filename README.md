@@ -43,9 +43,7 @@ const open = ref(false);
 
     <template #title>My Popover</template>
 
-    <template #content>
-      <p>Popover content goes here.</p>
-    </template>
+    <p>Popover content goes here.</p>
   </VPopover>
 </template>
 ```
@@ -70,7 +68,7 @@ const open = ref(false);
 | `activator` | Element that toggles the popover (required). |
 | `title` | Header content. When present, the header is shown and the popover becomes draggable by the header. |
 | `close` | Close button content (default: `×`). |
-| `content` | Main popover content (required). |
+| `default` | Main popover content (required). |
 
 ## Styling
 
