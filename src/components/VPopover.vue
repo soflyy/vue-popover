@@ -233,7 +233,7 @@ function onPopoverClick() {
 <template>
   <span
     ref="activatorRef"
-    :class="['v-popover__activator', props.pt?.activator?.class]"
+    class="v-popover__activator"
     @click="toggleOpen"
     v-bind="props.pt?.activator"
   >
@@ -244,7 +244,7 @@ function onPopoverClick() {
     <div
       v-if="isOpen"
       ref="popoverRef"
-      :class="['v-popover', props.pt?.root?.class]"
+      class="v-popover"
       :style="popoverStyle"
       :data-depth="parent.depth"
       @click="onPopoverClick"
@@ -252,18 +252,18 @@ function onPopoverClick() {
     >
       <div
         ref="headerRef"
-        :class="['v-popover__header', props.pt?.header?.class]"
+        class="v-popover__header"
         @pointerdown="draggable.onPointerDown"
         v-bind="props.pt?.header"
         v-if="hasTitle"
       >
         <slot name="title" />
 
-        <div :class="['v-popover__header-actions', props.pt?.actions?.class]" v-bind="props.pt?.actions">
+        <div class="v-popover__header-actions" v-bind="props.pt?.actions">
           <slot name="actions" />
 
           <button
-            :class="['v-popover__close', props.pt?.close?.class]"
+            class="v-popover__close"
             v-bind="props.pt?.close"
             @pointerdown.stop
             @click.stop.prevent="close"
@@ -274,7 +274,7 @@ function onPopoverClick() {
       </div>
 
       <div
-        :class="['v-popover__content', props.pt?.content?.class]"
+        class="v-popover__content"
         v-bind="props.pt?.content"
       >
         <slot />

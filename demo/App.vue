@@ -218,6 +218,7 @@ const bottomEdgeRows = ref(1);
         <template #title>
           &#9776; Draggable Popover
         </template>
+
         <p>Drag me around! I stay within the viewport.</p>
       </VPopover>
     </section>
