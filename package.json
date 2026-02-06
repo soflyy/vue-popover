@@ -14,11 +14,11 @@
       "import": "./dist/vue-popover.js",
       "require": "./dist/vue-popover.umd.cjs"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./src/style.css"
   },
   "scripts": {
     "dev": "vite serve demo",
-    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist && cp src/style.css dist/style.css",
+    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist",
     "prepare": "npm run build",
     "preview": "vite preview"
   },

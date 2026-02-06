@@ -14,6 +14,9 @@ export function isClickOutside(
 
   const clickedPopover = (target as Element).closest?.(".v-popover");
 
+  // Don't close if clicking on an overlay from Vuetify.
+  if ((target as Element).closest?.(".v-overlay")) return false;
+
   if (clickedPopover && clickedPopover !== root) {
     const clickedDepth = Number((clickedPopover as HTMLElement).dataset.depth);
     if (!Number.isNaN(clickedDepth)) {

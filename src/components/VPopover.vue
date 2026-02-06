@@ -225,7 +225,6 @@ const popoverStyle = computed(() => {
 
 function toggleOpen(event: MouseEvent) {
   event.stopPropagation();
-  console.log('Current target:', event.currentTarget);
   activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
 
   emit("update:open", !props.open);
@@ -269,7 +268,7 @@ function onPopoverClick() {
       >
         <slot name="title" />
 
-        <div class="v-popover__header-actions" v-bind="props.pt?.actions">
+        <div class="v-popover__actions" v-bind="props.pt?.actions">
           <slot name="actions" />
 
           <button
