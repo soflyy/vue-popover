@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
   destroyClickOutsideListener();
 });
 
-const zIndex = computed(() => 1000 + parent.depth * 10);
+const zIndex = computed(() => props.zIndex ?? 1000 + parent.depth * 10);
 
 const popoverStyle = computed(() => {
   const base =
@@ -210,6 +210,8 @@ const popoverStyle = computed(() => {
   return {
     ...base,
     width: toCssValue(props.width),
+    minWidth: toCssValue(props.minWidth),
+    maxWidth: toCssValue(props.maxWidth),
     height: toCssValue(props.height),
     maxHeight: toCssValue(props.maxHeight),
     zIndex: zIndex.value

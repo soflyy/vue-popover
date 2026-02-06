@@ -32,8 +32,17 @@ export interface PopoverProps {
   /** Preferred placement relative to activator */
   placement?: Placement | StackingStrategy;
 
+  /** z-index of the popover */
+  zIndex?: string | number;
+
   /** Width of the popover (CSS value) */
   width?: string | number;
+
+  /** Minimum width of the popover (CSS value) */
+  minWidth?: string | number;
+
+  /** Maximum width of the popover (CSS value) */
+  maxWidth?: string | number;
 
   /** Height of the popover (CSS value) */
   height?: string | number;
