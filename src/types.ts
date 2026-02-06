@@ -65,6 +65,9 @@ export interface PopoverProps {
   /** Close when clicking inside the popover. Default false. */
   closeOnClick?: boolean;
 
+  /** Close when pressing Escape. Default true. */
+  closeOnEsc?: boolean;
+
   /** Per-element passthrough attributes/classes */
   pt?: PassthroughOptions;
 }

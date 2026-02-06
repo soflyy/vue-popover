@@ -28,7 +28,8 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   padding: 8,
   flip: false,
   closeOnClickOutside: true,
-  closeOnClick: false
+  closeOnClick: false,
+  closeOnEsc: true
 });
 
 const emit = defineEmits<PopoverEmits>();
@@ -144,6 +145,8 @@ function onEscClick(event: KeyboardEvent) {
 }
 
 function setupEscapeListener() {
+  if (!props.closeOnEsc) return;
+
   nextTick(() => {
     document.addEventListener("keydown", onEscClick, true);
   });
@@ -178,13 +181,15 @@ function setupClickOutsideListener() {
 }
 
 watch(
-  () => [isOpen.value, props.closeOnClickOutside] as const,
-  ([open, closeOnOutside]) => {
+  () => [isOpen.value, props.closeOnClickOutside, props.closeOnEsc] as const,
+  ([open, closeOnOutside, closeOnEsc]) => {
     destroyEscapeListener();
     destroyClickOutsideListener();
 
     if (open) {
-      setupEscapeListener();
+      if (closeOnEsc) {
+        setupEscapeListener();
+      }
 
       if (closeOnOutside) {
         setupClickOutsideListener();
