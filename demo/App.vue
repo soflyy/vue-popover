@@ -21,7 +21,9 @@ const bottomEdgeOpen = ref(false);
 const bottomEdgeRows = ref(1);
 const externalActivatorOpen = ref(false);
 const externalActivatorRef = ref<HTMLElement | null>(null);
-
+const manualOpen = ref(false);
+const manualX = ref(0);
+const manualY = ref(0);
 
 const runDemoActions = (event: MouseEvent) => {
   console.log(event);
@@ -251,6 +253,38 @@ const runDemoActions = (event: MouseEvent) => {
         </template>
 
         <p>Drag me around! I stay within the viewport.</p>
+      </VPopover>
+    </section>
+
+    <section style="margin-bottom: 40px;">
+      <h2>Manual Positioning (clamped to viewport)</h2>
+      <p style="color: #666; margin-bottom: 12px;">
+        Click anywhere in the box to set the manual position. The popover is clamped to the viewport edges.
+      </p>
+      <div
+        style="position: relative; height: 220px; border: 1px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center;"
+        @click="(event) => { manualX = event.clientX; manualY = event.clientY; manualOpen = true; }"
+      >
+        <span>Click to place popover</span>
+      </div>
+      <VPopover
+        v-model:open="manualOpen"
+        :position-x="manualX"
+        :position-y="manualY"
+        :padding="12"
+        :close-on-content-click="false"
+        :pt="{
+          root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
+          content: { style: 'padding: 12px;' },
+        }"
+      >
+        <template #activator="{ props }">
+          <button v-bind="props">Open (manual)</button>
+        </template>
+        <p style="margin: 0 0 8px 0;">Manual coordinates:</p>
+        <div style="font-size: 12px; color: #666;">
+          x: {{ Math.round(manualX) }}, y: {{ Math.round(manualY) }}
+        </div>
       </VPopover>
     </section>
 

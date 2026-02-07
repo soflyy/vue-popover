@@ -12,7 +12,7 @@ export function useDraggable(options: UseDraggableOptions) {
   const isDragging = ref(false);
   const isDragged = ref(false);
   const dragPosition = ref<{ x: number; y: number } | null>(null);
-  const shouldUseDragStyles = computed(() => isDragged.value && dragPosition.value);
+  const isActive = computed(() => isDragged.value && dragPosition.value);
 
   let startPointer = { x: 0, y: 0 };
   let startPosition = { x: 0, y: 0 };
@@ -97,10 +97,10 @@ export function useDraggable(options: UseDraggableOptions) {
   return {
     isDragging,
     isDragged,
+    isActive,
     dragPosition,
     onPointerDown,
     styles,
-    shouldUseDragStyles,
     reset,
   };
 }

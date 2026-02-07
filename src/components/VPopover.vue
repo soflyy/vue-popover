@@ -7,6 +7,7 @@ import {
   nextTick,
   onBeforeUnmount,
   unref,
+  CSSProperties,
 } from "vue";
 
 import type {
@@ -21,6 +22,7 @@ import { usePopoverContext } from "../composables/usePopoverContext";
 import { useDraggable } from "../composables/useDraggable";
 import { toCssValue } from "../utils/css";
 import { isClickOutside } from "../utils/dom";
+import { useManualPositioning } from "../composables/useManualPositioning";
 import {
   createPopoverMiddleware,
   calculatePlacement,
@@ -47,9 +49,9 @@ const emit = defineEmits<PopoverEmits>();
 const slots = defineSlots<{
   activator(props: {
     props: {
-      onClick: (event: MouseEvent) => void };
-    }
-  ): any;
+      onClick: (event: MouseEvent) => void
+    };
+  }): any;
   title(): any;
   actions(): any;
   close(): any;
@@ -67,10 +69,13 @@ const resolvedActivatorRef = computed(() => {
   return external ?? activatorRef.value;
 });
 
-const parent = usePopoverContext(placement, popoverRef, headerRef);
+const parent = usePopoverContext(
+  placement,
+  popoverRef,
+  headerRef
+);
 
 const isOpen = computed(() => props.open);
-const floatingEnabled = ref(false);
 const hasTitle = computed(() => !!slots.title);
 
 const isStackingStrategy = (
@@ -83,7 +88,7 @@ const isStackingStrategy = (
   );
 };
 
-const activeStackingStrategy = computed<StackingStrategy | null>(() => {
+const stackingStrategy = computed<StackingStrategy | null>(() => {
   const parentPlacement = parent.placement?.value;
   if (isStackingStrategy(parentPlacement)) return parentPlacement;
   if (isStackingStrategy(placement.value)) return placement.value;
@@ -99,7 +104,7 @@ const basePlacement = computed<Placement>(() => {
 });
 
 const middleware = computed(() => {
-  const isStacked = activeStackingStrategy.value === "stacked" && parent.depth > 0;
+  const isStacked = stackingStrategy.value === "stacked" && parent.depth > 0;
 
   return createPopoverMiddleware({
     offsetY: props.offsetY,
@@ -111,7 +116,7 @@ const middleware = computed(() => {
 
 const internalPlacement = computed<Placement>(() => {
   return calculatePlacement({
-    strategy: activeStackingStrategy.value,
+    strategy: stackingStrategy.value,
     parentDepth: parent.depth,
     basePlacement: basePlacement.value,
     defaultPlacement: DEFAULT_PLACEMENT
@@ -120,12 +125,33 @@ const internalPlacement = computed<Placement>(() => {
 
 const reference = computed(() => {
   return getPopoverReference({
-    strategy: activeStackingStrategy.value,
+    strategy: stackingStrategy.value,
     parentDepth: parent.depth,
     activatorRef: resolvedActivatorRef.value,
     parentPopoverRef: parent.popoverRef.value,
     parentHeaderRef: parent.headerRef.value
   });
+});
+
+const draggable = useDraggable({
+  draggableRef: headerRef,
+  popoverRef
+});
+
+const { isManualPositioning, manualStyles } = useManualPositioning({
+  popoverRef,
+  isOpen,
+  positionX: toRef(props, "positionX"),
+  positionY: toRef(props, "positionY"),
+  padding: toRef(props, "padding")
+});
+
+const floatingEnabled = computed(() => {
+  if (!isOpen.value) return false;
+  if (isManualPositioning.value) return false;
+  if (draggable.isDragging.value) return false;
+  if (draggable.isDragged.value) return false;
+  return true;
 });
 
 const { floatingStyles } = useFloating(reference, popoverRef, {
@@ -134,24 +160,6 @@ const { floatingStyles } = useFloating(reference, popoverRef, {
   open: floatingEnabled,
   middleware,
   whileElementsMounted: autoUpdate,
-});
-
-const draggable = useDraggable({
-  draggableRef: headerRef,
-  popoverRef,
-  onDragStart() {
-    floatingEnabled.value = false;
-  },
-});
-
-watch(isOpen, (open) => {
-  if (open) {
-    nextTick(() => {
-      floatingEnabled.value = true;
-    });
-  } else {
-    floatingEnabled.value = false;
-  }
 });
 
 function destroyEscapeListener() {
@@ -226,10 +234,15 @@ onBeforeUnmount(() => {
 const zIndex = computed(() => props.zIndex ?? 1000 + parent.depth * 10);
 
 const popoverStyle = computed(() => {
-  const base =
-    draggable.shouldUseDragStyles.value
-      ? draggable.styles.value
-      : floatingStyles.value;
+  let base: CSSProperties = floatingStyles.value;
+
+  if (isManualPositioning.value) {
+    base = manualStyles.value;
+  }
+
+  if (draggable.isActive.value) {
+    base = draggable.styles.value;
+  }
 
   return {
     ...base,

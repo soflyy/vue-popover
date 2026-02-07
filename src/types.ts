@@ -62,6 +62,12 @@ export interface PopoverProps {
   /** Padding between the popover and the viewport in pixels */
   padding?: number;
 
+  /** Manual x-position (viewport coordinates) */
+  positionX?: number;
+
+  /** Manual y-position (viewport coordinates) */
+  positionY?: number;
+
   /** Enable floating-ui flip middleware */
   flip?: boolean;
 
