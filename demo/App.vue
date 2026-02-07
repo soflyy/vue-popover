@@ -19,6 +19,8 @@ const nestedStackedFirstVisibleOpen = ref(false);
 const draggableOpen = ref(false);
 const bottomEdgeOpen = ref(false);
 const bottomEdgeRows = ref(1);
+const externalActivatorOpen = ref(false);
+const externalActivatorRef = ref<HTMLElement | null>(null);
 
 
 const runDemoActions = (event: MouseEvent) => {
@@ -36,6 +38,7 @@ const runDemoActions = (event: MouseEvent) => {
       <VPopover
         v-model:open="basicOpen"
         placement="bottom-start"
+        :close-on-content-click="false"
         :width="250"
       >
         <template #activator="{ props }">
@@ -63,6 +66,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="topOpen"
           placement="top"
+          :close-on-content-click="false"
           :width="200"
           :pt="{
             root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
@@ -82,6 +86,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="leftOpen"
           placement="left"
+          :close-on-content-click="false"
           :width="200"
           :pt="{
             root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
@@ -101,6 +106,7 @@ const runDemoActions = (event: MouseEvent) => {
           v-model:open="rightOpen"
           placement="right"
           :width="200"
+          :close-on-content-click="false"
           :pt="{
             root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
             content: { style: 'padding: 12px;' },
@@ -118,6 +124,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="bottomLeftOpen"
           placement="bottom-start"
+          :close-on-content-click="false"
           :width="200"
           :pt="{
             root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
@@ -138,6 +145,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="nestedOuterOpen"
           placement="stacked"
+          :close-on-content-click="false"
           :width="300"
         >
           <template #activator="{ props }">
@@ -150,6 +158,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="nestedSideBySideOpen"
           placement="side-by-side"
+          :close-on-content-click="false"
           :width="300"
         >
           <template #activator="{ props }">
@@ -162,6 +171,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="nestedStackedFirstVisibleOpen"
           placement="stacked-first-visible"
+          :close-on-content-click="false"
           :width="300"
         >
           <template #activator="{ props }">
@@ -183,6 +193,7 @@ const runDemoActions = (event: MouseEvent) => {
         <VPopover
           v-model:open="bottomEdgeOpen"
           placement="right"
+          :close-on-content-click="false"
           :width="280"
           :max-height="400"
           :pt="{
@@ -223,6 +234,7 @@ const runDemoActions = (event: MouseEvent) => {
       <VPopover
         v-model:open="draggableOpen"
         placement="bottom-start"
+        :close-on-content-click="false"
         width="280"
         height="180"
         :pt="{
@@ -239,6 +251,33 @@ const runDemoActions = (event: MouseEvent) => {
         </template>
 
         <p>Drag me around! I stay within the viewport.</p>
+      </VPopover>
+    </section>
+
+    <section style="margin-bottom: 40px;">
+      <h2>Activator Ref Prop</h2>
+      <p style="color: #666; margin-bottom: 12px;">
+        The popover is positioned relative to an external button via `activator-ref`.
+      </p>
+      <button
+        ref="externalActivatorRef"
+        type="button"
+        style="padding: 6px 12px; cursor: pointer;"
+        @click="externalActivatorOpen = !externalActivatorOpen"
+      >
+        Toggle Popover
+      </button>
+      <VPopover
+        v-model:open="externalActivatorOpen"
+        placement="bottom-start"
+        :close-on-content-click="false"
+        :activator="externalActivatorRef"
+        :pt="{
+          root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
+          content: { style: 'padding: 12px;' },
+        }"
+      >
+        <p>This popover uses an external activator element.</p>
       </VPopover>
     </section>
   </div>

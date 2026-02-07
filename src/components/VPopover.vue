@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRef, nextTick, onBeforeUnmount } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  toRef,
+  nextTick,
+  onBeforeUnmount,
+  unref,
+} from "vue";
+
 import type {
   PopoverProps,
   PopoverEmits,
   Placement,
   StackingStrategy
 } from "../types";
+
 import { useFloating, autoUpdate } from "@floating-ui/vue";
 import { usePopoverContext } from "../composables/usePopoverContext";
 import { useDraggable } from "../composables/useDraggable";
@@ -52,6 +62,10 @@ const popoverRef = ref<HTMLElement | null>(null);
 const headerRef = ref<HTMLElement | null>(null);
 
 const placement = toRef(props, "placement");
+const resolvedActivatorRef = computed(() => {
+  const external = unref(props.activator);
+  return external ?? activatorRef.value;
+});
 
 const parent = usePopoverContext(placement, popoverRef, headerRef);
 
@@ -107,7 +121,7 @@ const reference = computed(() => {
   return getPopoverReference({
     strategy: activeStackingStrategy.value,
     parentDepth: parent.depth,
-    activatorRef: activatorRef.value,
+    activatorRef: resolvedActivatorRef.value,
     parentPopoverRef: parent.popoverRef.value,
     parentHeaderRef: parent.headerRef.value
   });
@@ -167,7 +181,7 @@ function onDocumentClick(event: MouseEvent) {
     isClickOutside(
       event.target,
       popoverRef.value,
-      activatorRef.value,
+      resolvedActivatorRef.value,
       parent.depth
     )
   ) {
@@ -229,7 +243,10 @@ const popoverStyle = computed(() => {
 
 function toggleOpen(event: MouseEvent) {
   event.stopPropagation();
-  activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
+
+  if (!props.activator) {
+    activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
+  }
 
   emit("update:open", !props.open);
 }

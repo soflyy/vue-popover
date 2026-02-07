@@ -5,7 +5,7 @@
   position: absolute;
   pointer-events: auto;
   contain: layout;
-  background-color: white;
+  background-color: var(--white, #fff);
   padding: 0;
   outline: none;
   overflow-y: auto;
@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
+  background-color: var(--white, #fff);
   border-bottom: 1px solid #e5e7eb;
   line-height: 1;
   padding: 8px;

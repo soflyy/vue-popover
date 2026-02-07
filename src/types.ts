@@ -32,6 +32,9 @@ export interface PopoverProps {
   /** Preferred placement relative to activator */
   placement?: Placement | StackingStrategy;
 
+  /** External activator element or ref */
+  activator?: HTMLElement | null | Ref<HTMLElement | null>;
+
   /** z-index of the popover */
   zIndex?: string | number;
 
