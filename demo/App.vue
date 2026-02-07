@@ -291,7 +291,7 @@ const runDemoActions = (event: MouseEvent) => {
     <section style="margin-bottom: 40px;">
       <h2>Activator Ref Prop</h2>
       <p style="color: #666; margin-bottom: 12px;">
-        The popover is positioned relative to an external button via `activator-ref`.
+        The popover is positioned relative to an external button via `relative-to`.
       </p>
       <button
         ref="externalActivatorRef"
