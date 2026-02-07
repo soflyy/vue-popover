@@ -1,16 +1,16 @@
 .v-popover {
-  border-radius: 3px;
+  border-radius: var(--popover-radius, 3px);
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
   outline: none;
   position: absolute;
   pointer-events: auto;
   contain: layout;
-  background-color: var(--white, #fff);
+  background-color: var(--popover-bg-color, var(--white, #fff));
   padding: 0;
   outline: none;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: thin;
+  scrollbar-width: var(--popover-scrollbar-width, thin);
 
   &,
   & * {
@@ -30,8 +30,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--white, #fff);
-  border-bottom: 1px solid var(--gray-200, #e5e7eb);
+  background-color: var(--popover-header-bg-color, var(--white, #fff));
+  border-bottom: 1px solid var(--popover-header-border-color, var(--gray-200, #e5e7eb));
   line-height: 1;
   padding: 8px;
   user-select: none;
@@ -55,7 +55,7 @@
   padding: 0;
   background-color: transparent;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--popover-close-size, 18px);
   line-height: 1;
 }
 
