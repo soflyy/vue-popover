@@ -31,7 +31,7 @@
   align-items: center;
   justify-content: space-between;
   background-color: var(--white, #fff);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--gray-200, #e5e7eb);
   line-height: 1;
   padding: 8px;
   user-select: none;
