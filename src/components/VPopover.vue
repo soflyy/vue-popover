@@ -34,7 +34,7 @@ const DEFAULT_PLACEMENT = "bottom-start";
 const props = withDefaults(defineProps<PopoverProps>(), {
   open: false,
   placement: DEFAULT_PLACEMENT,
-  offset: 8,
+  offsetY: 8,
   padding: 8,
   flip: false,
   closeOnClickOutside: true,
@@ -102,9 +102,10 @@ const middleware = computed(() => {
   const isStacked = activeStackingStrategy.value === "stacked" && parent.depth > 0;
 
   return createPopoverMiddleware({
-    offset: props.offset,
+    offsetY: props.offsetY,
+    offsetX: props.offsetX,
     flip: props.flip,
-    isStacked
+    isStacked,
   });
 });
 

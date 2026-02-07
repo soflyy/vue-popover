@@ -2,14 +2,15 @@ import { offset, flip, shift } from "@floating-ui/vue";
 import type { Placement, StackingStrategy } from "../types";
 
 export function createPopoverMiddleware(options: {
-  offset: number;
+  offsetY: number;
+  offsetX?: number;
   flip: boolean;
   isStacked: boolean;
   padding?: number;
 }) {
-  const mainAxis = options.offset;
+  const mainAxis = options.offsetY;
   // When stacked, we give a little extra padding so it looks better.
-  const crossAxis = options.isStacked ? 15 : 0;
+  const crossAxis = options.isStacked ? 15 : options.offsetX ?? 0;
   const padding = options.padding ?? 8;
 
   const pipeline = [
