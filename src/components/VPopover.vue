@@ -63,7 +63,7 @@ const headerRef = ref<HTMLElement | null>(null);
 
 const placement = toRef(props, "placement");
 const resolvedActivatorRef = computed(() => {
-  const external = unref(props.activator);
+  const external = unref(props.relativeTo);
   return external ?? activatorRef.value;
 });
 
@@ -243,11 +243,7 @@ const popoverStyle = computed(() => {
 
 function toggleOpen(event: MouseEvent) {
   event.stopPropagation();
-
-  if (!props.activator) {
-    activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
-  }
-
+  activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
   emit("update:open", !props.open);
 }
 

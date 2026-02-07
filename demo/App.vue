@@ -271,7 +271,7 @@ const runDemoActions = (event: MouseEvent) => {
         v-model:open="externalActivatorOpen"
         placement="bottom-start"
         :close-on-content-click="false"
-        :activator="externalActivatorRef"
+        :relative-to="externalActivatorRef"
         :pt="{
           root: { style: 'background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);' },
           content: { style: 'padding: 12px;' },
