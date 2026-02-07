@@ -35,6 +35,7 @@ const DEFAULT_PLACEMENT = "bottom-start";
 
 const props = withDefaults(defineProps<PopoverProps>(), {
   open: false,
+  disabled: false,
   placement: DEFAULT_PLACEMENT,
   offsetY: 8,
   padding: 8,
@@ -76,6 +77,8 @@ const parent = usePopoverContext(
 );
 
 const isOpen = computed(() => props.open);
+const isDisabled = computed(() => props.disabled);
+const isOpenEffective = computed(() => isOpen.value && !isDisabled.value);
 const hasTitle = computed(() => !!slots.title);
 
 const isStackingStrategy = (
@@ -140,14 +143,14 @@ const draggable = useDraggable({
 
 const { isManualPositioning, manualStyles } = useManualPositioning({
   popoverRef,
-  isOpen,
+  isOpen: isOpenEffective,
   positionX: toRef(props, "positionX"),
   positionY: toRef(props, "positionY"),
   padding: toRef(props, "padding")
 });
 
 const floatingEnabled = computed(() => {
-  if (!isOpen.value) return false;
+  if (!isOpenEffective.value) return false;
   if (isManualPositioning.value) return false;
   if (draggable.isDragging.value) return false;
   if (draggable.isDragged.value) return false;
@@ -167,7 +170,7 @@ function destroyEscapeListener() {
 }
 
 function onEscClick(event: KeyboardEvent) {
-  if (event.key !== "Escape" || !props.open) return;
+  if (event.key !== "Escape" || !isOpenEffective.value) return;
   emit("update:open", false);
 }
 
@@ -184,7 +187,7 @@ function destroyClickOutsideListener() {
 }
 
 function onDocumentClick(event: MouseEvent) {
-  if (!props.open) return;
+  if (!isOpenEffective.value) return;
 
   if (
     isClickOutside(
@@ -208,7 +211,12 @@ function setupClickOutsideListener() {
 }
 
 watch(
-  () => [isOpen.value, props.closeOnClickOutside, props.closeOnEsc] as const,
+  () => [
+    isOpenEffective.value,
+    props.closeOnClickOutside,
+    props.closeOnEsc,
+    isDisabled.value
+  ] as const,
   ([open, closeOnOutside, closeOnEsc]) => {
     destroyEscapeListener();
     destroyClickOutsideListener();
@@ -224,6 +232,15 @@ watch(
     }
   },
   { immediate: true }
+);
+
+watch(
+  () => props.disabled,
+  (disabled) => {
+    if (disabled && isOpen.value) {
+      emit("update:open", false);
+    }
+  }
 );
 
 onBeforeUnmount(() => {
@@ -256,6 +273,7 @@ const popoverStyle = computed(() => {
 });
 
 function toggleOpen(event: MouseEvent) {
+  if (isDisabled.value) return;
   event.stopPropagation();
   activatorRef.value = (event.currentTarget || event.target) as HTMLElement;
   emit("update:open", !props.open);
@@ -266,7 +284,7 @@ function close() {
 }
 
 function onPopoverClick(event: MouseEvent) {
-  if (!props.closeOnContentClick) return;
+  if (!props.closeOnContentClick || isDisabled.value) return;
   if (headerRef.value?.contains(event.target as Node)) return;
   emit("update:open", false);
 }
@@ -277,13 +295,13 @@ function onPopoverClick(event: MouseEvent) {
     class="v-popover__activator"
     name="activator"
     :props="{
-      onClick: toggleOpen,
+      onClick: toggleOpen
     }"
   />
 
   <Teleport to="body">
     <div
-      v-if="isOpen"
+      v-if="isOpenEffective"
       ref="popoverRef"
       class="v-popover"
       :style="popoverStyle"

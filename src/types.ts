@@ -29,6 +29,9 @@ export interface PopoverProps {
   /** Whether the popover is open (v-model) */
   open?: boolean;
 
+  /** Disable all interactions and keep closed */
+  disabled?: boolean;
+
   /** Preferred placement relative to activator */
   placement?: Placement | StackingStrategy;
 
