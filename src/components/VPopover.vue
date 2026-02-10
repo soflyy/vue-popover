@@ -122,7 +122,8 @@ const internalPlacement = computed<Placement>(() => {
     strategy: stackingStrategy.value,
     parentDepth: parent.depth,
     basePlacement: basePlacement.value,
-    defaultPlacement: DEFAULT_PLACEMENT
+    defaultPlacement: DEFAULT_PLACEMENT,
+    sidePlacement: props.sidePlacement
   });
 });
 

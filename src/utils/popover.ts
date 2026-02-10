@@ -39,17 +39,24 @@ export function calculatePlacement(options: {
   parentDepth: number;
   basePlacement: Placement;
   defaultPlacement: Placement;
+  sidePlacement?: Placement;
 }): Placement {
-  const { strategy, parentDepth, basePlacement, defaultPlacement } = options;
+  const {
+    strategy,
+    parentDepth,
+    basePlacement,
+    defaultPlacement,
+    sidePlacement = "right-start"
+  } = options;
 
   if (!strategy) return basePlacement;
 
   if (strategy === "side-by-side") {
-    return parentDepth > 0 ? "right-start" : basePlacement;
+    return parentDepth > 0 ? sidePlacement : basePlacement;
   }
 
   if (strategy === "stacked-first-visible") {
-    if (parentDepth === 1) return "right-start";
+    if (parentDepth === 1) return sidePlacement;
     if (parentDepth > 1) return defaultPlacement;
     return basePlacement;
   }

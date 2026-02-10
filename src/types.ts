@@ -35,6 +35,9 @@ export interface PopoverProps {
   /** Preferred placement relative to activator */
   placement?: Placement | StackingStrategy;
 
+  /** Placement used when a stacking strategy forces a side position */
+  sidePlacement?: Placement;
+
   /** External activator element or ref */
   relativeTo?: HTMLElement | null | Ref<HTMLElement | null>;
 
