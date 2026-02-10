@@ -38,12 +38,6 @@ export interface PopoverProps {
   /** Stacking strategy for nested popovers */
   stackingStrategy?: StackingStrategy;
 
-  /** Default placement when stacking overrides the base placement */
-  defaultPlacement?: Placement;
-
-  /** Placement used when a stacking strategy forces a side position */
-  sidePlacement?: Placement;
-
   /** External activator element or ref */
   relativeTo?: HTMLElement | null | Ref<HTMLElement | null>;
 
