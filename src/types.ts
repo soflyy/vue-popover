@@ -33,7 +33,13 @@ export interface PopoverProps {
   disabled?: boolean;
 
   /** Preferred placement relative to activator */
-  placement?: Placement | StackingStrategy;
+  placement?: Placement;
+
+  /** Stacking strategy for nested popovers */
+  stackingStrategy?: StackingStrategy;
+
+  /** Default placement when stacking overrides the base placement */
+  defaultPlacement?: Placement;
 
   /** Placement used when a stacking strategy forces a side position */
   sidePlacement?: Placement;
@@ -96,7 +102,8 @@ export interface PopoverEmits {
 
 export interface PopoverContext {
   depth: number;
-  placement: Ref<Placement | StackingStrategy | undefined>;
+  placement: Ref<Placement | undefined>;
+  stackingStrategy: Ref<StackingStrategy | undefined>;
   popoverRef: Ref<HTMLElement | null>;
   headerRef: Ref<HTMLElement | null>;
 }

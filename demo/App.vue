@@ -146,7 +146,7 @@ const runDemoActions = (event: MouseEvent) => {
       <div style="display: flex; gap: 16px;">
         <VPopover
           v-model:open="nestedOuterOpen"
-          placement="stacked"
+          stacking-strategy="stacked"
           :close-on-content-click="false"
           :width="300"
         >
@@ -159,7 +159,7 @@ const runDemoActions = (event: MouseEvent) => {
         </VPopover>
         <VPopover
           v-model:open="nestedSideBySideOpen"
-          placement="side-by-side"
+          stacking-strategy="side-by-side"
           :close-on-content-click="false"
           :width="300"
         >
@@ -172,7 +172,7 @@ const runDemoActions = (event: MouseEvent) => {
         </VPopover>
         <VPopover
           v-model:open="nestedStackedFirstVisibleOpen"
-          placement="stacked-first-visible"
+          stacking-strategy="stacked-first-visible"
           :close-on-content-click="false"
           :width="300"
         >

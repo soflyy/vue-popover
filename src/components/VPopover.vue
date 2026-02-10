@@ -65,6 +65,7 @@ const popoverRef = ref<HTMLElement | null>(null);
 const headerRef = ref<HTMLElement | null>(null);
 
 const placement = toRef(props, "placement");
+const stackingStrategy = toRef(props, "stackingStrategy");
 const resolvedActivatorRef = computed(() => {
   const external = unref(props.relativeTo);
   return external ?? activatorRef.value;
@@ -72,6 +73,7 @@ const resolvedActivatorRef = computed(() => {
 
 const parent = usePopoverContext(
   placement,
+  stackingStrategy,
   popoverRef,
   headerRef
 );
@@ -81,33 +83,12 @@ const isDisabled = computed(() => props.disabled);
 const isOpenEffective = computed(() => isOpen.value && !isDisabled.value);
 const hasTitle = computed(() => !!slots.title);
 
-const isStackingStrategy = (
-  value: Placement | StackingStrategy | undefined
-): value is StackingStrategy => {
-  return (
-    value === "side-by-side" ||
-    value === "stacked" ||
-    value === "stacked-first-visible"
-  );
-};
-
-const stackingStrategy = computed<StackingStrategy | null>(() => {
-  const parentPlacement = parent.placement?.value;
-  if (isStackingStrategy(parentPlacement)) return parentPlacement;
-  if (isStackingStrategy(placement.value)) return placement.value;
-  return null;
-});
-
-const basePlacement = computed<Placement>(() => {
-  if (placement.value && !isStackingStrategy(placement.value)) {
-    return placement.value;
-  }
-
-  return DEFAULT_PLACEMENT;
+const resolvedStackingStrategy = computed<StackingStrategy | null>(() => {
+  return parent.stackingStrategy?.value ?? stackingStrategy.value ?? null;
 });
 
 const middleware = computed(() => {
-  const isStacked = stackingStrategy.value === "stacked" && parent.depth > 0;
+  const isStacked = resolvedStackingStrategy.value === "stacked" && parent.depth > 0;
 
   return createPopoverMiddleware({
     offsetY: props.offsetY,
@@ -119,17 +100,15 @@ const middleware = computed(() => {
 
 const internalPlacement = computed<Placement>(() => {
   return calculatePlacement({
-    strategy: stackingStrategy.value,
+    strategy: resolvedStackingStrategy.value,
     parentDepth: parent.depth,
-    basePlacement: basePlacement.value,
-    defaultPlacement: DEFAULT_PLACEMENT,
-    sidePlacement: props.sidePlacement
+    placement: placement.value,
   });
 });
 
 const reference = computed(() => {
   return getPopoverReference({
-    strategy: stackingStrategy.value,
+    strategy: resolvedStackingStrategy.value,
     parentDepth: parent.depth,
     activatorRef: resolvedActivatorRef.value,
     parentPopoverRef: parent.popoverRef.value,

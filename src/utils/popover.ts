@@ -37,35 +37,31 @@ export function createPopoverMiddleware(options: {
 export function calculatePlacement(options: {
   strategy: StackingStrategy | null;
   parentDepth: number;
-  basePlacement: Placement;
-  defaultPlacement: Placement;
-  sidePlacement?: Placement;
+  placement: Placement;
 }): Placement {
   const {
     strategy,
     parentDepth,
-    basePlacement,
-    defaultPlacement,
-    sidePlacement = "right-start"
+    placement,
   } = options;
 
-  if (!strategy) return basePlacement;
+  if (!strategy) return placement;
 
   if (strategy === "side-by-side") {
-    return parentDepth > 0 ? sidePlacement : basePlacement;
+    return parentDepth > 0 ? "right-start" : placement;
   }
 
   if (strategy === "stacked-first-visible") {
-    if (parentDepth === 1) return sidePlacement;
-    if (parentDepth > 1) return defaultPlacement;
-    return basePlacement;
+    if (parentDepth === 1) return "right-start";
+    if (parentDepth > 1) return "bottom-start";
+    return placement;
   }
 
   if (strategy === "stacked") {
-    return parentDepth > 0 ? defaultPlacement : basePlacement;
+    return parentDepth > 0 ? "bottom-start" : placement;
   }
 
-  return basePlacement;
+  return placement;
 }
 
 export function getPopoverReference(options: {
