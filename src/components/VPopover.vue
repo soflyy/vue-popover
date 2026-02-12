@@ -8,6 +8,7 @@ import {
   onBeforeUnmount,
   unref,
   CSSProperties,
+  useTemplateRef
 } from "vue";
 
 import type {
@@ -61,8 +62,14 @@ const slots = defineSlots<{
 }>();
 
 const activatorRef = ref<HTMLElement | null>(null);
-const popoverRef = ref<HTMLElement | null>(null);
-const headerRef = ref<HTMLElement | null>(null);
+const popoverRef = useTemplateRef<HTMLElement>("popoverRef");
+const headerRef = useTemplateRef<HTMLElement>("headerRef");
+
+defineExpose({
+  activatorRef,
+  popoverRef,
+  headerRef
+});
 
 const placement = toRef(props, "placement");
 const stackingStrategy = toRef(props, "stackingStrategy");
