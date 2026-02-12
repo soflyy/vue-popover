@@ -1,5 +1,6 @@
-import { ref, onBeforeUnmount, type Ref, computed, watch, nextTick } from "vue";
+import { ref, onBeforeUnmount, type Ref, computed } from "vue";
 import { clamp } from "../utils/css";
+import { useResizeObserver } from "./useResizeObserver";
 
 export interface UseDraggableOptions {
   draggableRef: Ref<HTMLElement | null>;
@@ -12,8 +13,7 @@ export function useDraggable(options: UseDraggableOptions) {
   const isDragging = ref(false);
   const isDragged = ref(false);
   const dragPosition = ref<{ x: number; y: number } | null>(null);
-  const isActive = computed(() => isDragged.value && dragPosition.value);
-  let resizeObserver: ResizeObserver | null = null;
+  const isActive = computed(() => !!(isDragged.value && dragPosition.value));
 
   let startPointer = { x: 0, y: 0 };
   let startPosition = { x: 0, y: 0 };
@@ -25,11 +25,6 @@ export function useDraggable(options: UseDraggableOptions) {
       top: `${dragPosition.value!.y}px`
     };
   });
-
-  function destroyResizeObserver() {
-    resizeObserver?.disconnect();
-    resizeObserver = null;
-  }
 
   function recalculatePositionOnHeightChange() {
     const target = options.popoverRef.value;
@@ -48,13 +43,11 @@ export function useDraggable(options: UseDraggableOptions) {
     }
   }
 
-  function setupResizeObserver(target: HTMLElement) {
-    if (typeof ResizeObserver === "undefined") return;
-    if (!isActive.value) return;
-
-    resizeObserver = new ResizeObserver(recalculatePositionOnHeightChange);
-    resizeObserver.observe(target);
-  }
+  useResizeObserver({
+    targetRef: options.popoverRef,
+    enabled: isActive,
+    onResize: recalculatePositionOnHeightChange
+  });
 
   function onPointerDown(event: PointerEvent) {
     const handle = options.draggableRef.value;
@@ -120,26 +113,9 @@ export function useDraggable(options: UseDraggableOptions) {
     dragPosition.value = null;
   }
 
-  watch(
-    () => [isActive.value, options.popoverRef.value] as const,
-    ([active, popover]) => {
-      destroyResizeObserver();
-
-      if (!active || !popover) return;
-
-      nextTick(() => {
-        if (!isActive.value || options.popoverRef.value !== popover) return;
-
-        setupResizeObserver(popover);
-      });
-    },
-    { immediate: true }
-  );
-
   onBeforeUnmount(() => {
     document.removeEventListener("pointermove", onPointerMove);
     document.removeEventListener("pointerup", onPointerUp);
-    destroyResizeObserver();
   });
 
   return {

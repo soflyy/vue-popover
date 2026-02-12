@@ -128,6 +128,7 @@ const draggable = useDraggable({
   popoverRef
 });
 
+// TODO: This is redundant with the useDraggable composable
 const { isManualPositioning, manualStyles } = useManualPositioning({
   popoverRef,
   isOpen: isOpenEffective,

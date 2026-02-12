@@ -1,5 +1,6 @@
 import { computed, CSSProperties, nextTick, onBeforeUnmount, Ref, ref, watch } from "vue";
 import { clamp } from "../utils/css";
+import { useResizeObserver } from "./useResizeObserver";
 
 export interface UseManualPositioningOptions {
   popoverRef: Ref<HTMLElement | null>;
@@ -15,12 +16,14 @@ export function useManualPositioning(options: UseManualPositioningOptions) {
   const isManualPositioning = computed(() => {
     return options.positionX.value !== undefined && options.positionY.value !== undefined;
   });
+  const isManualPositioningActive = computed(() => {
+    return options.isOpen.value && isManualPositioning.value;
+  });
 
   const rectRef = ref<DOMRect | null>(null);
   const viewportTick = ref(0);
-  let manualResizeObserver: ResizeObserver | null = null;
 
-  function updateManualMetrics() {
+  function computeManualPosition() {
     if (!isManualPositioning.value || !options.popoverRef.value) return;
 
     rectRef.value = options.popoverRef.value.getBoundingClientRect();
@@ -60,24 +63,21 @@ export function useManualPositioning(options: UseManualPositioningOptions) {
   });
 
   function destroyManualPositioning() {
-    manualResizeObserver?.disconnect();
-    manualResizeObserver = null;
-    window.removeEventListener("resize", updateManualMetrics);
+    window.removeEventListener("resize", computeManualPosition);
   }
 
   function setupManualPositioning() {
     if (!isManualPositioning.value || !options.popoverRef.value) return;
 
-    updateManualMetrics();
-    window.addEventListener("resize", updateManualMetrics);
-
-    if (typeof ResizeObserver !== "undefined") {
-      manualResizeObserver = new ResizeObserver(() => {
-        updateManualMetrics();
-      });
-      manualResizeObserver.observe(options.popoverRef.value);
-    }
+    computeManualPosition();
+    window.addEventListener("resize", computeManualPosition);
   }
+
+  useResizeObserver({
+    targetRef: options.popoverRef,
+    enabled: isManualPositioningActive,
+    onResize: computeManualPosition
+  });
 
   watch(options.isOpen, async (open) => {
     if (open) {
@@ -114,6 +114,20 @@ export function useManualPositioning(options: UseManualPositioningOptions) {
         setupManualPositioning();
       });
     }
+  );
+
+  watch(
+    isManualPositioningActive,
+    (active) => {
+      destroyManualPositioning();
+      if (!active) return;
+
+      nextTick(() => {
+        if (!isManualPositioningActive.value) return;
+        setupManualPositioning();
+      });
+    },
+    { immediate: true }
   );
 
   onBeforeUnmount(() => {
