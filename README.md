@@ -37,8 +37,8 @@ const open = ref(false);
 
 <template>
   <VPopover v-model:open="open" placement="bottom" :width="250">
-    <template #activator>
-      <button>Open popover</button>
+    <template #activator="{ props }">
+      <button v-bind="props">Open popover</button>
     </template>
 
     <template #title>My Popover</template>
