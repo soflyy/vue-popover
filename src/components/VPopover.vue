@@ -43,7 +43,8 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   flip: false,
   closeOnClickOutside: true,
   closeOnContentClick: true,
-  closeOnEsc: true
+  closeOnEsc: true,
+  skipStackingStrategy: false,
 });
 
 const emit = defineEmits<PopoverEmits>();
@@ -91,6 +92,7 @@ const isOpenEffective = computed(() => isOpen.value && !isDisabled.value);
 const hasTitle = computed(() => !!slots.title);
 
 const resolvedStackingStrategy = computed<StackingStrategy | null>(() => {
+  if (props.skipStackingStrategy) return null;
   return parent.stackingStrategy?.value ?? stackingStrategy.value ?? null;
 });
 
@@ -219,7 +221,9 @@ watch(
       }
     }
   },
-  { immediate: true }
+  {
+    immediate: true
+  }
 );
 
 watch(
@@ -295,7 +299,10 @@ function onPopoverClick(event: MouseEvent) {
       :style="popoverStyle"
       :data-depth="parent.depth"
       @click="onPopoverClick"
-      v-bind="{ ...$attrs, ...props.pt?.root }"
+      v-bind="{
+        ...$attrs,
+        ...props.pt?.root
+      }"
     >
       <div
         ref="headerRef"

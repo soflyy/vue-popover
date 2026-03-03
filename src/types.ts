@@ -88,6 +88,9 @@ export interface PopoverProps {
 
   /** Per-element passthrough attributes/classes */
   pt?: PassthroughOptions;
+
+  /** Skip the stacking strategy. Default false. */
+  skipStackingStrategy?: boolean;
 }
 
 export interface PopoverEmits {
