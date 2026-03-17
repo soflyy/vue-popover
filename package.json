@@ -12,7 +12,7 @@
     "./style.css": "./src/style.css"
   },
   "scripts": {
-    "dev": "vite serve demo",
+    "dev:demo": "vite serve demo",
     "preview": "vite preview"
   },
   "peerDependencies": {
