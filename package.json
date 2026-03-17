@@ -27,8 +27,5 @@
     "vite": "^6.0.0",
     "vue": "^3.5.0",
     "vue-tsc": "^2.0.0"
-  },
-  "dependencies": {
-    "vue-popover": "github:soflyy/vue-popover"
   }
 }
