@@ -1,3 +1,6 @@
+> ⚠️ **Important**
+> This repository has been consolidated into the main [Breakdance](https://github.com/soflyy/breakdance) monorepo.
+
 # vue-popover
 
 A Vue 3 popover component with flexible positioning, drag-to-move, and customizable styling. Uses [Floating UI](https://floating-ui.com/) for viewport-aware positioning.
